@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamster Kombat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        #game-container {
+            margin: 50px auto;
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        #health {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Hamster Kombat</h1>
+        <div id="health">Health: 100</div>
+        <button onclick="attack()">Attack</button>
+        <button onclick="heal()">Heal</button>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // إعداد حالة الصحة
+        let health = 100;
+
+        function attack() {
+            const damage = Math.floor(Math.random() * 15) + 5;
+            health -= damage;
+            if (health <= 0) {
+                health = 0;
+                alert("Game Over! You lost.");
+            }
+            document.getElementById('health').textContent = `Health: ${health}`;
+            sendDataToTelegram("attack", damage);
+        }
+
+        function heal() {
+            const healing = Math.floor(Math.random() * 15) + 5;
+            health += healing;
+            if (health > 100) health = 100;
+            document.getElementById('health').textContent = `Health: ${health}`;
+            sendDataToTelegram("heal", healing);
+        }
+
+        function sendDataToTelegram(action, value) {
+            Telegram.WebApp.sendData(JSON.stringify({ action: action, value: value }));
+        }
+
+        Telegram.WebApp.ready();
+    </script>
+</body>
+</html>
